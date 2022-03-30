@@ -4,17 +4,18 @@ import Data.Array
 -- long as the total weight does not exceed the maximum. 
 
 -- items is a list of (value, weight) 
-knapsack_ub :: (Ord a, Num a) => [(a, a)] -> a -> a
-knapsack_ub items wmax = m wmax
+    
+knapsack_ub items wmax = table!wmax
   where
-    m 0 = 0
+    table    = array (0, wmax) [(weight, m weight) | weight <- [0..wmax]] 
     -- the 0 is needed because the list comprehension may result in empty
-    -- list.
-    m weight = maximum $ 0:[vi + m (weight - wi) | (vi, wi) <- items, 
+    m 0      = 0
+    m weight = maximum $ 0:[vi + table!(weight - wi) | (vi, wi) <- items, 
                             wi <= weight]
-
+                            
 -- solution to bounded Knapsack problem, we can only pick one of each item from
 -- the list.
+
 knapsack items wmax = table!(nitems, wmax)
   where
     nitems  = length items
